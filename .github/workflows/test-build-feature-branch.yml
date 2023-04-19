@@ -1,0 +1,37 @@
+name: Test and Deploy
+on:
+  - workflow_dispatch
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+      - run: 'npm config set //registry.npmjs.org/:_authToken=${{ secrets.POSTMAN_NPM_TOKEN }}'
+      - run: 'npm ci --force'
+      - run: 'npm test'
+
+  deploy-beta:
+    if: ${{ github.ref_name == 'channel/beta' }} # If the branch is channel/beta, auto deploy to beta
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying on beta...."
+
+  deploy-beta-feature-branch:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying on beta from feature branch...."
