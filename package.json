@@ -1,0 +1,19 @@
+{
+  "name": "github-workflows-poc",
+  "version": "1.0.0",
+  "description": "This is a repo with POC code to explore Github workflows",
+  "main": "helloWorld.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rzachari091521/Github-Workflows-POC.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rzachari091521/Github-Workflows-POC/issues"
+  },
+  "homepage": "https://github.com/rzachari091521/Github-Workflows-POC#readme"
+}
