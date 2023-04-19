@@ -1,6 +1,6 @@
-name: Test and Deploy
-on:
-  - workflow_dispatch
+name: Test and Deploy Feature Branch
+on: 
+  workflow_dispatch
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -30,7 +30,7 @@ jobs:
     steps:
       - run: echo "Deploying on beta...."
 
-  deploy-beta-feature-branch:
+  deploy-beta-from-feature-branch:
     needs: test
     runs-on: ubuntu-latest
     steps:
