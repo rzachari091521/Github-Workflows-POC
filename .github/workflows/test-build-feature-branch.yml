@@ -29,13 +29,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Deploying on beta...."
-  
-  deploy-stage:
-    if: startsWith(github.ref, 'release/v')
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Deploying on stage...."
 
   deploy-beta-from-feature-branch:
     needs: test

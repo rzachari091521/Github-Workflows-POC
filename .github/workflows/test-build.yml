@@ -1,6 +1,5 @@
 name: Test and Deploy
-on: 
-  push
+on: [push, workflow_dispatch]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -29,3 +28,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Deploying on beta...."
+
+  deploy-stage:
+    if: startsWith(github.ref, 'release/v')
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying on stage...."
+  
+  deploy-feature-branch:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{ github.event }}
