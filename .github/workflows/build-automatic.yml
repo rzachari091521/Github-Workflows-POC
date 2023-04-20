@@ -4,7 +4,6 @@ on:
     workflows: ["Test"]
     types:
       - completed
-  push:
 
 concurrency:
   group: deploy-${{ github.workflow }}-${{ github.ref }}
