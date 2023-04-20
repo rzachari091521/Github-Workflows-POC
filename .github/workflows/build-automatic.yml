@@ -1,0 +1,24 @@
+name: Test and Deploy
+on: [push, workflow_dispatch]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    uses: rzachari091521/Github-Workflows-POC/.github/workflows/test.yml@main
+
+  deploy-beta:
+    if: ${{ github.ref_name == 'channel/beta' }} # If the branch is channel/beta, auto deploy to beta
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying on beta...."
+
+  deploy-stage:
+    if: startsWith(github.ref, 'release')
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying on stage...."
