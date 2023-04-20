@@ -1,6 +1,5 @@
 name: Test
-on: 
-  workflow_call
+on: [push, workflow_call]
 
 concurrency:
   group: test-${{ github.workflow }}-${{ github.ref }}
