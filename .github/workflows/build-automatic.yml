@@ -12,14 +12,12 @@ concurrency:
 jobs:
   deploy-beta:
     if: ${{ github.ref_name == 'channel/beta' }} # If the branch is channel/beta, auto deploy to beta
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - run: echo "Deploying on beta...."
 
   deploy-stage:
     if: startsWith(github.ref, 'release')
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - run: echo "Deploying on stage...."
