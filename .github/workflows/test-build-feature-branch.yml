@@ -23,13 +23,6 @@ jobs:
       - run: 'npm ci --force'
       - run: 'npm test'
 
-  deploy-beta:
-    if: ${{ github.ref_name == 'channel/beta' }} # If the branch is channel/beta, auto deploy to beta
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Deploying on beta...."
-
   deploy-beta-from-feature-branch:
     needs: test
     runs-on: ubuntu-latest

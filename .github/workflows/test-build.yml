@@ -30,14 +30,8 @@ jobs:
       - run: echo "Deploying on beta...."
 
   deploy-stage:
-    if: startsWith(github.ref, 'release/v')
+    if: startsWith(github.ref, 'release')
     needs: test
     runs-on: ubuntu-latest
     steps:
       - run: echo "Deploying on stage...."
-  
-  deploy-feature-branch:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "${{ github.event.id }}"
