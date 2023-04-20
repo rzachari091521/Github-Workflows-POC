@@ -40,4 +40,4 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ github.event.action }}"
+      - run: echo "${{ github.event.id }}"
