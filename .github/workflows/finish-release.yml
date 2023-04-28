@@ -11,7 +11,7 @@ jobs:
       - name: create pull request
         run: |
           ls -latr
-          echo ${{ secrets.TOKEN }} | gh auth login --with-token
+          echo $GITHUB_TOKEN | gh auth login --with-token
           gh pr create -B develop -H release/v1.0.0 --title 'Merge release/v1.0.0 into develop' --body 'Created by Github action'
         env:
             GITHUB_TOKEN: ${{ secrets.TOKEN }}
