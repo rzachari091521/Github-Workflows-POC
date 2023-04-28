@@ -12,5 +12,5 @@ jobs:
       - name: create pull request        
         run: |
           gh auth status
-          gh pr create -B develop -H channel/beta --title 'Merge channel/beta into develop' --body 'Created by Github action'
+          gh pr create -B main -H channel/beta --title 'Merge channel/beta into develop' --body 'Created by Github action'
         
