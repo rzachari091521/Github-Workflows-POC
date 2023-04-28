@@ -14,5 +14,5 @@ jobs:
           gh auth status
           echo $GITHUB_TOKEN
           gh auth login --with-token
-          gh pr create -B develop -H release/v1.0.0 --title 'Merge release/v1.0.0 into develop' --body 'Created by Github action'
+          gh pr create -B develop -H channel/beta --title 'Merge channel/beta into develop' --body 'Created by Github action'
         
