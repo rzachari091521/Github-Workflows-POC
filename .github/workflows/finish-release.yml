@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: create pull request
-        run: gh pr create -B develop -H release/v1.0.0 --title 'Merge release/v1.0.0 into develop' --body 'Created by Github action'
+        run: |
+          ls -latr
+          gh pr create -B develop -H release/v1.0.0 --title 'Merge release/v1.0.0 into develop' --body 'Created by Github action'
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
