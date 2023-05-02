@@ -60,13 +60,16 @@ jobs:
           echo -e "\n$(cyan [INFO]) Push new release branch to remote"
           git push -u origin release/$BUMP_VERSION
 
-  create-pr-from-release-branch:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: create pull request  
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}      
-        run: |
+          echo -e "\n$(cyan [INFO]) Create PR from release branch to main"
           gh pr create -B main -H release/$BUMP_VERSION --title 'Merge into Main' --body 'Created by Github action'
+
+  # create-pr-from-release-branch:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: create pull request  
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.TOKEN }}      
+  #       run: |
+  #         gh pr create -B main -H release/$BUMP_VERSION --title 'Merge into Main' --body 'Created by Github action'
         
