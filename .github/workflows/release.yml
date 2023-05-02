@@ -14,7 +14,67 @@ jobs:
       - uses: actions/setup-node@v3
       - name: Bump version
         run: |
-          echo "Version: ${{ github.event.inputs.version }}"
+          set -e
+
+          RED='\033[0;31m'
+          GREEN='\033[0;32m'
+          YELLOW='\033[0;33m'
+          CYAN='\033[0;36m'
+          NC='\033[0m' # No Color
+          function red {
+            printf "${RED}$@${NC}\n"
+          }
+          function green {
+            printf "${GREEN}$@${NC}\n"
+          }
+          function yellow {
+            printf "${YELLOW}$@${NC}\n"
+          }
+          function cyan {
+            printf "${CYAN}$@${NC}\n"
+          }
+
+          BUMP_VERSION=${{ github.event.inputs.version }}
+          UNCOMMIT_CHANGES=`git status --porcelain=v1 2>/dev/null | wc -l`
+
+          if (( $UNCOMMIT_CHANGES != 0 )); then
+            git status
+            echo -e "\n$(yellow [WARN]) Please commit or stash the changes before making new release";
+            exit 1;
+          fi
+
+          if ! (echo $BUMP_VERSION | grep -E '^(((([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)((?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)|patch|minor|major))$'); then
+            echo -e "\n$(red [ERROR]) Invalid semantic version found";
+            exit 1;
+          fi
+
+          echo -e "\n$(cyan [INFO]) Calculating version"
+          BUMP_VERSION="`npm version $BUMP_VERSION --no-git-tag-version`"
+          git checkout package.json package-lock.json
+
+          echo -e "\n$(cyan [INFO]) Updating \`develop\`"
+          git checkout develop
+          git pull origin develop
+
+          echo -e "\n$(cyan [INFO]) Updating \`master\`"
+          git checkout master
+          git pull origin master
+
+          echo -e "\n$(cyan [INFO]) Creating new release branch"
+          git checkout -b release/$BUMP_VERSION # new release branch
+
+          echo -e "\n$(cyan [INFO]) Pulling beta changes in release"
+          git pull origin develop
+
+          echo -e "\n$(cyan [INFO]) Bump version"
+          npm version $BUMP_VERSION --no-git-tag-version
+
+          echo -e "\n$(cyan [INFO]) Commit Changes"
+          git add package.json package-lock.json
+          git commit -m "Bumped up version to $BUMP_VERSION"
+
+          echo -e "\n$(cyan [INFO]) Push new release branch to remote"
+          git push -u origin release/$BUMP_VERSION
 
   # create-pr-from-release-branch:
   #   if: ${{ contains(github.ref, 'refs/heads/release/') }}
