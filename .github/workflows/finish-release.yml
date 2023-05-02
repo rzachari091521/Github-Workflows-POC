@@ -1,11 +1,9 @@
 name: Finish Release
 on: 
   workflow_dispatch:
-  create:
 
 jobs:
   create-pr-from-release-branch:
-    if: startsWith(github.ref, 'release/v')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
