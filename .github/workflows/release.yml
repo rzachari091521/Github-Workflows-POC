@@ -56,9 +56,9 @@ jobs:
           git checkout develop
           git pull origin develop
 
-          echo -e "\n$(cyan [INFO]) Updating \`master\`"
-          git checkout master
-          git pull origin master
+          echo -e "\n$(cyan [INFO]) Updating \`main\`"
+          git checkout main
+          git pull origin main
 
           echo -e "\n$(cyan [INFO]) Creating new release branch"
           git checkout -b release/$BUMP_VERSION # new release branch
