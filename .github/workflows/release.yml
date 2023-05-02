@@ -9,10 +9,12 @@ on:
 jobs:
   bump-version:
     runs-on: ubuntu-latest
-    steps:
+    steps: 
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - name: Bump version
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }} 
         run: |
           set -e
 
