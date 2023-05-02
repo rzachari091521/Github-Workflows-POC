@@ -65,6 +65,7 @@ jobs:
           git checkout -b release/$BUMP_VERSION # new release branch
 
           echo -e "\n$(cyan [INFO]) Pulling beta changes in release"
+          git config pull.rebase false
           git pull origin develop
 
           echo -e "\n$(cyan [INFO]) Bump version"
