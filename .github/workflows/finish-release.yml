@@ -11,6 +11,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}      
         run: |
-          echo running on branch ${GITHUB_REF##*/}
-          gh pr create -B main -H release/v1.0.3 --title 'Merge release/v1.0.3 into develop' --body 'Created by Github action'
+          gh pr create -B main -H release/${GITHUB_REF##*/} --title 'Merge release/${GITHUB_REF##*/} into develop' --body 'Created by Github action'
         
