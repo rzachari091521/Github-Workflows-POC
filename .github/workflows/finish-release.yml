@@ -6,7 +6,6 @@ on:
 
 jobs:
   create-pr-from-release-branch:
-    if: ${{ contains(github.ref, 'refs/heads/release/') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -15,5 +14,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}      
         run: |
           gh pr create -B develop -H release/${GITHUB_REF##*/} --title 'Back merge to develop' --body 'Created by Github action'
-          
+
         
