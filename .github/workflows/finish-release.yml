@@ -13,6 +13,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}      
         run: |
-          gh pr create -B develop -H release/${GITHUB_REF##*/} --title 'Back merge to develop' --body 'Created by Github action'
+          gh pr create -B develop -H main --title 'Back merge to develop' --body 'Created by Github action'
 
         
