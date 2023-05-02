@@ -1,7 +1,8 @@
 name: Finish Release
 on: 
-  workflow_dispatch:
-  create:
+  push:
+    branches:
+      - main
 
 jobs:
   create-pr-from-release-branch:
@@ -13,5 +14,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}      
         run: |
-          gh pr create -B main -H release/${GITHUB_REF##*/} --title 'Merge into Main' --body 'Created by Github action'
+          gh pr create -B develop -H release/${GITHUB_REF##*/} --title 'Back merge to develop' --body 'Created by Github action'
+          
         
