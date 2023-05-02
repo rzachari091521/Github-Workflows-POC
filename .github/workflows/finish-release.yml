@@ -1,10 +1,14 @@
 name: Finish Release
 on: 
-  workflow_dispatch
-
+  workflow_dispatch:
+  push:
+    types: [created]
+    branches:
+      - 'releases/**'
 
 jobs:
   create-pr-from-release-branch:
+    if: github.event.push.created
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -12,5 +16,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}      
         run: |
-          gh pr create -B main -H channel/beta --title 'Merge channel/beta into develop' --body 'Created by Github action'
+          gh pr create -B main -H release/v1.0.2 --title 'Merge release/v1.0.2 into develop' --body 'Created by Github action'
         
