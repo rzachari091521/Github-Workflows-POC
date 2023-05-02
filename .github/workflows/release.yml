@@ -66,9 +66,10 @@ jobs:
 
           echo -e "\n$(cyan [INFO]) Pulling beta changes in release"
           git config pull.rebase false
+          git config --global user.email "raima.zachariah@postman.com"
+          git config --global user.name "Raima Zachariah"
           git pull origin develop --allow-unrelated-histories
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
+          
 
           echo -e "\n$(cyan [INFO]) Bump version"
           npm version $BUMP_VERSION --no-git-tag-version
