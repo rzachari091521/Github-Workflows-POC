@@ -10,10 +10,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: create pull request  
+        id: pr_create
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}      
         run: |
-          gh pr create -B develop -H main --title 'Back merge to develop' --body 'Created by Github action'
-          gh pr merge develop
+          PR_URL=$(gh pr create -B develop -H main --title 'Back merge to develop' --body 'Created by Github action')
+          echo "$PR_URL"
+          gh pr merge $PR_URL
+
 
         
