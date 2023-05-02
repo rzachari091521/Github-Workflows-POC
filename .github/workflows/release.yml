@@ -35,13 +35,6 @@ jobs:
           }
 
           BUMP_VERSION=${{ github.event.inputs.version }}
-          UNCOMMIT_CHANGES=`git status --porcelain=v1 2>/dev/null | wc -l`
-
-          if (( $UNCOMMIT_CHANGES != 0 )); then
-            git status
-            echo -e "\n$(yellow [WARN]) Please commit or stash the changes before making new release";
-            exit 1;
-          fi
 
           if ! (echo $BUMP_VERSION | grep -E '^(((([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)((?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)|patch|minor|major))$'); then
             echo -e "\n$(red [ERROR]) Invalid semantic version found";
@@ -52,29 +45,15 @@ jobs:
           BUMP_VERSION="`npm version $BUMP_VERSION --no-git-tag-version`"
           git checkout package.json package-lock.json
 
-          echo -e "\n$(cyan [INFO]) Updating \`develop\`"
-          git checkout develop
-          git pull origin develop
-
-          echo -e "\n$(cyan [INFO]) Updating \`main\`"
-          git fetch --all
-          git checkout main
-          git pull origin main
-
           echo -e "\n$(cyan [INFO]) Creating new release branch"
           git checkout -b release/$BUMP_VERSION # new release branch
-
-          echo -e "\n$(cyan [INFO]) Pulling beta changes in release"
-          git config pull.rebase false
-          git config --global user.email "raima.zachariah@postman.com"
-          git config --global user.name "Raima Zachariah"
-          git pull origin develop --allow-unrelated-histories
-          
 
           echo -e "\n$(cyan [INFO]) Bump version"
           npm version $BUMP_VERSION --no-git-tag-version
 
           echo -e "\n$(cyan [INFO]) Commit Changes"
+          git config --global user.email "raima.zachariah@postman.com"
+          git config --global user.name "Raima Zachariah"
           git add package.json package-lock.json
           git commit -m "Bumped up version to $BUMP_VERSION"
 
