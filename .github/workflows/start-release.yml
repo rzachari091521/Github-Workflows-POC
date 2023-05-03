@@ -38,7 +38,7 @@ jobs:
           npm version $BUMP_VERSION --no-git-tag-version
 
           echo -e "\n[INFO] Commit Changes"
-          BUMP_VERSION=${{ github.actor }}
+          GIT_USER=${{ github.actor }}
           echo -e "\n[INFO] $GIT_USER"
           echo "Github context is $GITHUB_CONTEXT"
           git config --global user.email "dummy_user@example.com"
