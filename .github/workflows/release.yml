@@ -23,6 +23,10 @@ jobs:
             exit 1;
           fi
 
+          echo -e "\n[INFO] Switch to develop branch"
+          git checkout develop
+          git pull origin develop
+
           echo -e "\n[INFO] Calculating version"
           BUMP_VERSION="`npm version $BUMP_VERSION --no-git-tag-version`"
           git checkout package.json package-lock.json
