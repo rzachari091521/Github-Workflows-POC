@@ -7,19 +7,19 @@ on:
         description: Version of the release
 
 jobs:
-  bump-version:
+  start-release:
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - name: Bump version
+      - name: Start release
         env:
           GITHUB_TOKEN: ${{ github.TOKEN }} 
         run: |
           BUMP_VERSION=${{ github.event.inputs.version }}
 
           if ! (echo $BUMP_VERSION | grep -E '^(((([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)((?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)|patch|minor|major))$'); then
-            echo -e "\n[ERROR] Invalid semantic version found";
+            echo -e "\n$[ERROR] Invalid semantic version found";
             exit 1;
           fi
 
@@ -27,13 +27,9 @@ jobs:
           BUMP_VERSION="`npm version $BUMP_VERSION --no-git-tag-version`"
           git checkout package.json package-lock.json
       
-      - name: Create new release branch
-        run: |
           echo -e "\n[INFO] Creating new release branch"
           git checkout -b release/$BUMP_VERSION # new release branch
 
-      - name: Update package version
-        run: |
           echo -e "\n[INFO] Bump version"
           npm version $BUMP_VERSION --no-git-tag-version
 
@@ -46,8 +42,6 @@ jobs:
           echo -e "\n[INFO] Push new release branch to remote"
           git push -u origin release/$BUMP_VERSION
 
-      - name: Create PR to main
-        run: |
           echo -e "\n[INFO] Create PR from release branch to main"
           gh pr create -B main -H release/$BUMP_VERSION --title 'Merge into Main' --body 'Created by Github action'
 
