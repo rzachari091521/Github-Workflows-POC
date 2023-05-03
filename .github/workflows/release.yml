@@ -1,4 +1,4 @@
-name: Release
+name: Start Release
 on: 
   workflow_dispatch:
     inputs:
@@ -16,62 +16,39 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.TOKEN }} 
         run: |
-          set -e
-
-          RED='\033[0;31m'
-          GREEN='\033[0;32m'
-          YELLOW='\033[0;33m'
-          CYAN='\033[0;36m'
-          NC='\033[0m' # No Color
-          function red {
-            printf "${RED}$@${NC}\n"
-          }
-          function green {
-            printf "${GREEN}$@${NC}\n"
-          }
-          function yellow {
-            printf "${YELLOW}$@${NC}\n"
-          }
-          function cyan {
-            printf "${CYAN}$@${NC}\n"
-          }
-
           BUMP_VERSION=${{ github.event.inputs.version }}
 
           if ! (echo $BUMP_VERSION | grep -E '^(((([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)((?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)|patch|minor|major))$'); then
-            echo -e "\n$(red [ERROR]) Invalid semantic version found";
+            echo -e "\n[ERROR] Invalid semantic version found";
             exit 1;
           fi
 
-          echo -e "\n$(cyan [INFO]) Calculating version"
+          echo -e "\n[INFO] Calculating version"
           BUMP_VERSION="`npm version $BUMP_VERSION --no-git-tag-version`"
           git checkout package.json package-lock.json
-
-          echo -e "\n$(cyan [INFO]) Creating new release branch"
+      
+      - name: Create new release branch
+        run: |
+          echo -e "\n[INFO] Creating new release branch"
           git checkout -b release/$BUMP_VERSION # new release branch
 
-          echo -e "\n$(cyan [INFO]) Bump version"
+      - name: Update package version
+        run: |
+          echo -e "\n[INFO] Bump version"
           npm version $BUMP_VERSION --no-git-tag-version
 
-          echo -e "\n$(cyan [INFO]) Commit Changes"
+          echo -e "\n[INFO] Commit Changes"
           git config --global user.email "raima.zachariah@postman.com"
           git config --global user.name "Raima Zachariah"
           git add package.json package-lock.json
           git commit -m "Bumped up version to $BUMP_VERSION"
 
-          echo -e "\n$(cyan [INFO]) Push new release branch to remote"
+          echo -e "\n[INFO] Push new release branch to remote"
           git push -u origin release/$BUMP_VERSION
 
-          echo -e "\n$(cyan [INFO]) Create PR from release branch to main"
+      - name: Create PR to main
+        run: |
+          echo -e "\n[INFO] Create PR from release branch to main"
           gh pr create -B main -H release/$BUMP_VERSION --title 'Merge into Main' --body 'Created by Github action'
 
-  # create-pr-from-release-branch:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: create pull request  
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.TOKEN }}      
-  #       run: |
-  #         gh pr create -B main -H release/$BUMP_VERSION --title 'Merge into Main' --body 'Created by Github action'
         
