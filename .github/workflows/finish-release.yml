@@ -16,6 +16,7 @@ jobs:
         run: |
           PR_URL="$(gh pr create -B develop -H main --title 'Back merge to develop' --body 'Created by Github action')"
           echo "url is $PR_URL"
+          gh pr merge $PR_URL
 
 
         
