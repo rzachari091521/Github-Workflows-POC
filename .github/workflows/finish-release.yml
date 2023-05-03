@@ -15,7 +15,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}      
         run: |
           PR_URL="$(gh pr create -B develop -H main --title 'Back merge to develop' --body 'Created by Github action')"
-          echo "$PR_URL"
+          echo "url is $PR_URL"
 
 
         
