@@ -1,0 +1,52 @@
+name: Hotfix
+on: 
+  workflow_dispatch:
+    # inputs:
+    #   version:
+    #     type: string
+    #     description: Version of the release
+
+jobs:
+  start-hotfix:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - name: Start hotfix
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }} 
+        run: |
+          BUMP_VERSION='patch'
+
+          if ! (echo $BUMP_VERSION | grep -E '^(((([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)((?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)|patch|minor|major))$'); then
+            echo -e "\n$[ERROR] Invalid semantic version found";
+            exit 1;
+          fi
+
+          echo -e "\n[INFO] Switch to main branch"
+          git checkout main
+          git pull origin main
+
+          echo -e "\n[INFO] Calculating version"
+          BUMP_VERSION="`npm version $BUMP_VERSION --no-git-tag-version`"
+          git checkout package.json package-lock.json
+      
+          echo -e "\n[INFO] Creating new hotfix branch"
+          git checkout -b hotfix/$BUMP_VERSION
+
+          echo -e "\n[INFO] Bump version"
+          npm version $BUMP_VERSION --no-git-tag-version
+
+          echo -e "\n[INFO] Commit Changes"
+          git config --global user.email "raima.zachariah@postman.com"
+          git config --global user.name "Raima Zachariah"
+          git add package.json package-lock.json
+          git commit -m "Bumped up version to $BUMP_VERSION"
+
+          echo -e "\n[INFO] Push new hofix branch to remote"
+          git push -u origin hotfix/$BUMP_VERSION
+
+          echo -e "\n[INFO] Create PR from hotfix branch to main"
+          gh pr create -B main -H hotfix/$BUMP_VERSION --title 'Merge into Main' --body 'Created by Github action'
+
+        
