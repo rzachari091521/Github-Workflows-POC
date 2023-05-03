@@ -38,8 +38,8 @@ jobs:
           npm version $BUMP_VERSION --no-git-tag-version
 
           echo -e "\n[INFO] Commit Changes"
-          git config --global user.email "raima.zachariah@postman.com"
-          git config --global user.name "Raima Zachariah"
+          git config --global user.email "dummy_user@example.com"
+          git config --global user.name "Dummy User"
           git add package.json package-lock.json
           git commit -m "Bumped up version to $BUMP_VERSION"
 
