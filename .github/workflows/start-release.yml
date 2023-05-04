@@ -14,8 +14,7 @@ jobs:
       - uses: actions/setup-node@v3
       - name: Start release
         env:
-          GITHUB_TOKEN: ${{ github.TOKEN }} 
-          GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }} 
         run: |
           BUMP_VERSION=${{ github.event.inputs.version }}
 
@@ -39,9 +38,6 @@ jobs:
           npm version $BUMP_VERSION --no-git-tag-version
 
           echo -e "\n[INFO] Commit Changes"
-          GIT_USER=${{ github.actor }}
-          echo -e "\n[INFO] $GIT_USER"
-          echo "Github context is $GITHUB_CONTEXT"
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
           git add package.json package-lock.json
