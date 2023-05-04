@@ -51,8 +51,8 @@ jobs:
           git push -u origin release/$BUMP_VERSION
 
           echo -e "\n[INFO] Create PR from release branch to main"
-          PR_URL="$(gh pr create -B main -H release/$BUMP_VERSION --title "Release, $BUMP_VERSION" --body 'Created by Github action')"
-
-          gh pr diff $PR_URL
+          PRURL="$(gh pr create -B main -H release/$BUMP_VERSION --title "Release, $BUMP_VERSION" --body 'Created by Github action')"
+          
+          gh pr diff $PRURL
 
         
