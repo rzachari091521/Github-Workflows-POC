@@ -1,0 +1,19 @@
+on:
+  pull_request:
+    branches: [ develop ]
+
+
+jobs:
+  get_files:
+    name: run_on_pr
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+
+      - name: Modified files
+        run: |
+          git fetch origin develop:develop
+          git diff --name-only --diff-filter=d develop~ develop
