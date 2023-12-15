@@ -12,8 +12,18 @@ jobs:
         uses: actions/checkout@master
         with:
           fetch-depth: 0
-
-      - name: Modified files
+      
+      - name: Get changed files
+        id: changed-files
         run: |
-          git fetch origin develop:develop
-          git diff --name-only --diff-filter=d develop~ develop
+            if ${{ github.event_name == 'pull_request' }}; then
+                echo "changed_files=$(git diff --name-only -r HEAD^1 HEAD | xargs)" >> $GITHUB_OUTPUT
+            else
+                echo "changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
+            fi
+
+      - name: List changed files
+        run: |
+            for file in ${{ steps.changed-files.outputs.changed_files }}; do
+                echo "$file was changed"
+            done
